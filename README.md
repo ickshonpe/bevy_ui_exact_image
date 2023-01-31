@@ -7,9 +7,9 @@
 * Preserve the aspect ratio of images, regardless of the UI layout.
 * Also supports image rotation. 
 
-![image](sizes.png)
+![image](/assets/sizes.png)
 
-![image](rotation.png)
+![image](/assets/rotation.png)
 
 #
 ## Usage
@@ -61,7 +61,7 @@ fn main() {
 
 Result:
 
-![image](example.png)
+![image](/assets/example.png)
 
 #
 ## Examples
