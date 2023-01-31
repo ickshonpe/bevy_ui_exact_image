@@ -7,7 +7,7 @@
 * Preserve the aspect ratio of images, regardless of the UI layout.
 * Also supports image rotation. 
 
-![image](screenshot.png)
+![image](sizes.png)
 
 ![image](rotation.png)
 
