@@ -1,0 +1,18 @@
+[package]
+name = "bevy_ui_exact_image"
+version = "0.1.0"
+edition = "2021"
+license = "MIT OR Apache-2.0"
+keywords = ["bevy", "texture", "graphics", "ui", "games"]
+categories = ["game-development", "graphics", "gui"]
+repository = "https://github.com/ickshonpe/bevy_ui_exact_image"
+readme = "README.md"
+description = "Bevy UI image widget with more control over the size of images and their orientation"
+
+[dependencies.bevy]
+version = "0.9"
+default_features= false
+features = ["bevy_asset", "render"]
+
+[dev-dependencies]
+bevy = "0.9"
