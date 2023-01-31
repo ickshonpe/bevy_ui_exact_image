@@ -78,3 +78,9 @@ cargo --run --example alignment
 * No image flipping. Not possible (at least not trivially) with a third party implementation atm in Bevy 0.9.
 
 * No texture atlas support. Will add this later.
+
+## Notes
+
+Name stolen from inodentry's related Bevy issue #7439
+
+[https://github.com/bevyengine/bevy/issues/7349](https://github.com/bevyengine/bevy/issues/7349)
