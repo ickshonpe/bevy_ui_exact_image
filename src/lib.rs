@@ -9,8 +9,16 @@ use bevy::ui::RenderUiSystem;
 use bevy::ui::UiStack;
 use bevy::ui::UiSystem;
 
+pub mod prelude {
+    pub use crate::ExactSize;
+    pub use crate::ExactImage;
+    pub use crate::ExactImageBundle;
+    pub use crate::ImageAlignment;
+    pub use crate::ExactImagePlugin;
+}
+
 #[derive(Copy, Clone, Default, Reflect)]
-pub enum ImageSizeMode {
+pub enum ExactSize {
     #[default]
     /// The ui will attempt to size the node to preserve the aspect ratio of the image
     AttemptPreserveAspectRatio,
@@ -49,7 +57,7 @@ pub struct ExactImage {
     pub rotation: Option<f32>,
     pub alignment: ImageAlignment,
     pub color: Color,
-    pub size: ImageSizeMode,
+    pub size: ExactSize,
 }
 
 #[derive(Bundle)]
@@ -109,8 +117,8 @@ pub fn exact_image_system(
         if let Some(texture) = textures.get(&image.texture) {
             match (image.size, calculated_sizes.get_mut(id)) {
                 (
-                    ImageSizeMode::AttemptPreserveAspectRatio
-                    | ImageSizeMode::ForcePreserveAspectRatio,
+                    ExactSize::AttemptPreserveAspectRatio
+                    | ExactSize::ForcePreserveAspectRatio,
                     Ok(mut calculated_size),
                 ) => {
                     let texture_size = texture.size();
@@ -120,8 +128,8 @@ pub fn exact_image_system(
                     }
                 }
                 (
-                    ImageSizeMode::AttemptPreserveAspectRatio
-                    | ImageSizeMode::ForcePreserveAspectRatio,
+                    ExactSize::AttemptPreserveAspectRatio
+                    | ExactSize::ForcePreserveAspectRatio,
                     Err(_),
                 ) => {
                     let texture_size = texture.size();
@@ -164,7 +172,7 @@ pub fn extract_exact_image(
 
             let mut size = node.size();
             match image.size {
-                ImageSizeMode::ForcePreserveAspectRatio => {
+                ExactSize::ForcePreserveAspectRatio => {
                     if matches!(
                         style.flex_direction,
                         FlexDirection::Column | FlexDirection::ColumnReverse
@@ -174,13 +182,13 @@ pub fn extract_exact_image(
                         size.y = size.x * images.get(&image.texture).unwrap().aspect_2d();
                     }
                 }
-                ImageSizeMode::Texture => {
+                ExactSize::Texture => {
                     size = images.get(&image.texture).unwrap().size() * scale_factor
                 }
-                ImageSizeMode::Scaled(scale) => {
+                ExactSize::Scaled(scale) => {
                     size = scale * images.get(&image.texture).unwrap().size() * scale_factor
                 }
-                ImageSizeMode::Exactly(custom_size) => size = custom_size * scale_factor,
+                ExactSize::Exactly(custom_size) => size = custom_size * scale_factor,
                 _ => {}
             }
 
@@ -222,9 +230,9 @@ pub fn extract_exact_image(
     }
 }
 
-pub struct UiImagePlusPlugin;
+pub struct ExactImagePlugin;
 
-impl Plugin for UiImagePlusPlugin {
+impl Plugin for ExactImagePlugin {
     fn build(&self, app: &mut App) {
         app.register_type::<ExactImage>().add_system_to_stage(
             CoreStage::PostUpdate,

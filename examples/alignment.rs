@@ -2,18 +2,17 @@ use bevy::prelude::*;
 use bevy_ui_exact_image::*;
 
 fn spawn_example(mut commands: Commands, assets: Res<AssetServer>) {
-    let node_size = Size::new(Val::Px(128.0), Val::Px(128.0));
-    let alignment = ImageAlignment::BottomLeft;
     commands.spawn(Camera2dBundle::default());
     commands.spawn(ExactImageBundle {
         image: ExactImage {
             texture: assets.load("orientation.png"),
-            size: ImageSizeMode::Texture,
-            alignment,
+            size: ExactSize::Texture,
+            alignment: ImageAlignment::BottomLeft,
+            rotation: None,
             ..Default::default()
         },
         style: Style {
-            size: node_size,
+            size: Size::new(Val::Px(128.0), Val::Px(128.0)),
             ..Default::default()
         },
         background_color: BackgroundColor(Color::RED),
@@ -35,7 +34,7 @@ fn main() {
                     ..Default::default()
                 }),
         )
-        .add_plugin(UiImagePlusPlugin)
+        .add_plugin(ExactImagePlugin)
         .add_startup_system(spawn_example)
         .run();
 }

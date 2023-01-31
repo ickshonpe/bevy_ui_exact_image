@@ -20,7 +20,7 @@ fn spawn_example(mut commands: Commands, assets: Res<AssetServer>) {
             builder.spawn((ExactImageBundle {
                 image: ExactImage {
                     texture: assets.load("orientation.png"),
-                    size: ImageSizeMode::FillNode,
+                    size: ExactSize::FillNode,
                     alignment,
                     ..Default::default()
                 },
@@ -34,22 +34,7 @@ fn spawn_example(mut commands: Commands, assets: Res<AssetServer>) {
             builder.spawn((ExactImageBundle {
                 image: ExactImage {
                     texture: assets.load("orientation.png"),
-                    size: ImageSizeMode::Texture,
-                    alignment,
-                    ..Default::default()
-                },
-                style: Style {
-                    size: node_size,
-                    ..Default::default()
-                },
-                background_color: BackgroundColor(Color::RED),
-                ..Default::default()
-            },));
-
-            builder.spawn((ExactImageBundle {
-                image: ExactImage {
-                    texture: assets.load("orientation.png"),
-                    size: ImageSizeMode::AttemptPreserveAspectRatio,
+                    size: ExactSize::Texture,
                     alignment,
                     ..Default::default()
                 },
@@ -64,7 +49,22 @@ fn spawn_example(mut commands: Commands, assets: Res<AssetServer>) {
             builder.spawn((ExactImageBundle {
                 image: ExactImage {
                     texture: assets.load("orientation.png"),
-                    size: ImageSizeMode::ForcePreserveAspectRatio,
+                    size: ExactSize::AttemptPreserveAspectRatio,
+                    alignment,
+                    ..Default::default()
+                },
+                style: Style {
+                    size: node_size,
+                    ..Default::default()
+                },
+                background_color: BackgroundColor(Color::RED),
+                ..Default::default()
+            },));
+
+            builder.spawn((ExactImageBundle {
+                image: ExactImage {
+                    texture: assets.load("orientation.png"),
+                    size: ExactSize::ForcePreserveAspectRatio,
                     alignment,
                     ..Default::default()
                 },
@@ -89,7 +89,7 @@ fn spawn_example(mut commands: Commands, assets: Res<AssetServer>) {
                     builder.spawn((ExactImageBundle {
                         image: ExactImage {
                             texture: assets.load("orientation.png"),
-                            size: ImageSizeMode::ForcePreserveAspectRatio,
+                            size: ExactSize::ForcePreserveAspectRatio,
                             alignment,
                             ..Default::default()
                         },
@@ -107,7 +107,7 @@ fn spawn_example(mut commands: Commands, assets: Res<AssetServer>) {
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins.set(ImagePlugin::default_nearest()))
-        .add_plugin(UiImagePlusPlugin)
+        .add_plugin(ExactImagePlugin)
         .add_startup_system(spawn_example)
         .run();
 }

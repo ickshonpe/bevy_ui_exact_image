@@ -36,7 +36,7 @@ fn spawn_example(mut commands: Commands, assets: Res<AssetServer>) {
                                 texture: assets.load("orientation.png"),
                                 color: Color::WHITE,
                                 rotation: Some(rotation),
-                                size: ImageSizeMode::Texture,
+                                size: ExactSize::Texture,
                                 ..Default::default()
                             },
                             style: Style {
@@ -55,7 +55,7 @@ fn spawn_example(mut commands: Commands, assets: Res<AssetServer>) {
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins.set(ImagePlugin::default_nearest()))
-        .add_plugin(UiImagePlusPlugin)
+        .add_plugin(ExactImagePlugin)
         .add_startup_system(spawn_example)
         .run();
 }
