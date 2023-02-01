@@ -5,10 +5,11 @@
 
 * Force the Bevy UI to draw images in whatever sizes you want.
 * Preserve the aspect ratio of images, regardless of the UI layout.
-* Also supports image rotation. 
+* Draw UI images from texture atlases
+* Supports image rotation 
 
 ![image](/assets/sizes.png)
-
+![image](/assets/texture_atlas_example.png)
 ![image](/assets/rotation.png)
 
 #
@@ -35,7 +36,7 @@ fn spawn_example(mut commands: Commands, assets: Res<AssetServer>) {
             color: Color::WHITE,
             // force the UI to display the texture at 300 x 200 size
             size: ExactSize::Exactly(Vec2::new(300., 200.)),
-            // sets the alignment of the image if it doesn't fill the containing node
+            // align the image to the bottom edge of the node, in the center.
             alignment: ImageAlignment::BottomCenter,
             // use Some(rads) to set rotation
             rotation: None,
@@ -75,12 +76,12 @@ cargo --run --example alignment
 
 ## Limitations
 
-* No image flipping. Not possible (at least not trivially) with a third party implementation atm in Bevy 0.9.
-
-* No texture atlas support. Will add this later.
+* No image flipping. Not possible (or at least not trivial) with a third party implementation atm in Bevy 0.9.
 
 ## Notes
 
-Name stolen from inodentry's related Bevy issue #7439
+* Probably quite a few bugs, I haven't done much testing.
 
-[https://github.com/bevyengine/bevy/issues/7349](https://github.com/bevyengine/bevy/issues/7349)
+* Name stolen from inodentry's related Bevy issue #7439
+
+    [https://github.com/bevyengine/bevy/issues/7349](https://github.com/bevyengine/bevy/issues/7349)
