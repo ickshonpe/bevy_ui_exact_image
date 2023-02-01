@@ -5,8 +5,8 @@
 
 * Force the Bevy UI to draw images in whatever sizes you want.
 * Preserve the aspect ratio of images, regardless of the UI layout.
-* Draw UI images from texture atlases
-* Supports image rotation 
+* Full support for texture atlas images.
+* Image rotation.
 
 ![image](/assets/sizes.png)
 ![image](/assets/texture_atlas_example.png)
