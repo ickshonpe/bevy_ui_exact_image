@@ -52,10 +52,7 @@ fn spawn_example(mut commands: Commands, assets: Res<AssetServer>) {
         });
 }
 
-fn rotate_images(
-    time: Res<Time>,
-    mut exact_image_query: Query<&mut ExactImage>,
-) {
+fn rotate_images(time: Res<Time>, mut exact_image_query: Query<&mut ExactImage>) {
     exact_image_query.iter_mut().for_each(|mut exact_image| {
         if let Some(ref mut rotation) = exact_image.rotation {
             *rotation += 0.5 * time.delta_seconds();

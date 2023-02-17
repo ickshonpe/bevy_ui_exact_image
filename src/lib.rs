@@ -10,13 +10,13 @@ use bevy::ui::UiStack;
 use bevy::ui::UiSystem;
 
 pub mod prelude {
+    pub use crate::ExactAtlasImage;
+    pub use crate::ExactAtlasImageBundle;
+    pub use crate::ExactImage;
+    pub use crate::ExactImageBundle;
+    pub use crate::ExactImagePlugin;
     pub use crate::ExactSize;
     pub use crate::ImageAlignment;
-    pub use crate::ExactImage;
-    pub use crate::ExactAtlasImage;
-    pub use crate::ExactImageBundle;
-    pub use crate::ExactAtlasImageBundle;
-    pub use crate::ExactImagePlugin;
 }
 
 #[derive(Copy, Clone, Default, Reflect)]
@@ -59,7 +59,7 @@ pub struct ExactImage {
     pub rotation: Option<f32>,
     pub alignment: ImageAlignment,
     pub color: Color,
-    pub size: ExactSize,    
+    pub size: ExactSize,
 }
 
 #[derive(Component, Default, Reflect)]
@@ -167,6 +167,7 @@ impl Default for ExactAtlasImageBundle {
     }
 }
 
+#[allow(clippy::type_complexity)]
 pub fn exact_image_system(
     mut commands: Commands,
     textures: Res<Assets<Image>>,
@@ -177,8 +178,7 @@ pub fn exact_image_system(
         if let Some(texture) = textures.get(&image.texture) {
             match (image.size, calculated_sizes.get_mut(id)) {
                 (
-                    ExactSize::AttemptPreserveAspectRatio
-                    | ExactSize::ForcePreserveAspectRatio,
+                    ExactSize::AttemptPreserveAspectRatio | ExactSize::ForcePreserveAspectRatio,
                     Ok(mut calculated_size),
                 ) => {
                     let texture_size = texture.size();
@@ -188,8 +188,7 @@ pub fn exact_image_system(
                     }
                 }
                 (
-                    ExactSize::AttemptPreserveAspectRatio
-                    | ExactSize::ForcePreserveAspectRatio,
+                    ExactSize::AttemptPreserveAspectRatio | ExactSize::ForcePreserveAspectRatio,
                     Err(_),
                 ) => {
                     let texture_size = texture.size();
@@ -205,6 +204,7 @@ pub fn exact_image_system(
     }
 }
 
+#[allow(clippy::type_complexity)]
 pub fn exact_atlas_image_system(
     mut commands: Commands,
     atlases: Res<Assets<TextureAtlas>>,
@@ -215,8 +215,7 @@ pub fn exact_atlas_image_system(
         if let Some(texture_atlas) = atlases.get(&atlas_image.atlas) {
             match (atlas_image.size, calculated_sizes.get_mut(id)) {
                 (
-                    ExactSize::AttemptPreserveAspectRatio
-                    | ExactSize::ForcePreserveAspectRatio,
+                    ExactSize::AttemptPreserveAspectRatio | ExactSize::ForcePreserveAspectRatio,
                     Ok(mut calculated_size),
                 ) => {
                     let texture_size = texture_atlas.textures[atlas_image.index].size();
@@ -226,8 +225,7 @@ pub fn exact_atlas_image_system(
                     }
                 }
                 (
-                    ExactSize::AttemptPreserveAspectRatio
-                    | ExactSize::ForcePreserveAspectRatio,
+                    ExactSize::AttemptPreserveAspectRatio | ExactSize::ForcePreserveAspectRatio,
                     Err(_),
                 ) => {
                     let texture_size = texture_atlas.textures[atlas_image.index].size();
@@ -243,7 +241,7 @@ pub fn exact_atlas_image_system(
     }
 }
 
-
+#[allow(clippy::type_complexity)]
 pub fn extract_exact_images(
     mut extracted_uinodes: ResMut<ExtractedUiNodes>,
     images: Extract<Res<Assets<Image>>>,
@@ -307,9 +305,9 @@ pub fn extract_exact_images(
                 },
             };
 
-            transform = transform * Mat4::from_translation(alignment_offset.extend(0.));
+            transform *= Mat4::from_translation(alignment_offset.extend(0.));
             if let Some(rotation) = image.rotation {
-                transform = transform * Mat4::from_rotation_z(rotation);
+                transform *= Mat4::from_rotation_z(rotation);
             }
 
             extracted_uinodes.uinodes.push(ExtractedUiNode {
@@ -329,6 +327,7 @@ pub fn extract_exact_images(
     }
 }
 
+#[allow(clippy::type_complexity)]
 pub fn extract_exact_atlas_images(
     mut extracted_uinodes: ResMut<ExtractedUiNodes>,
     images: Extract<Res<Assets<Image>>>,
@@ -348,7 +347,9 @@ pub fn extract_exact_atlas_images(
 ) {
     let scale_factor = ui_scale.scale as f32;
     for (stack_index, entity) in ui_stack.uinodes.iter().enumerate() {
-        if let Ok((node, style, atlas_image, transform, visibility, clip)) = uinode_query.get(*entity) {
+        if let Ok((node, style, atlas_image, transform, visibility, clip)) =
+            uinode_query.get(*entity)
+        {
             if !visibility.is_visible() || atlas_image.color.a() == 0. {
                 continue;
             }
@@ -358,14 +359,13 @@ pub fn extract_exact_atlas_images(
                     continue;
                 }
                 let rect = texture_atlas.textures[atlas_image.index];
-                println!("rect: {:?}", rect);
                 let mut transform = transform.compute_matrix();
 
                 let mut size = node.size();
                 match atlas_image.size {
                     ExactSize::ForcePreserveAspectRatio => {
                         let aspect = rect.size().y / rect.size().x;
-                       match style.flex_direction {
+                        match style.flex_direction {
                             FlexDirection::Column | FlexDirection::ColumnReverse => {
                                 size.x = size.y / aspect;
                             }
@@ -374,12 +374,8 @@ pub fn extract_exact_atlas_images(
                             }
                         }
                     }
-                    ExactSize::Texture => {
-                        size = rect.size() * scale_factor
-                    }
-                    ExactSize::Scaled(scale) => {
-                        size = scale * rect.size() * scale_factor
-                    }
+                    ExactSize::Texture => size = rect.size() * scale_factor,
+                    ExactSize::Scaled(scale) => size = scale * rect.size() * scale_factor,
                     ExactSize::Exactly(custom_size) => size = custom_size * scale_factor,
                     _ => {}
                 }
@@ -399,13 +395,13 @@ pub fn extract_exact_atlas_images(
                         Anchor(Vec2 { y, .. }) => y * 0.5 * node.size().y,
                     },
                 };
-                
-                transform = transform * Mat4::from_translation(alignment_offset.extend(0.));
+
+                transform *= Mat4::from_translation(alignment_offset.extend(0.));
                 if let Some(rotation) = atlas_image.rotation {
-                    transform = transform * Mat4::from_rotation_z(rotation);
+                    transform *= Mat4::from_rotation_z(rotation);
                 }
                 let scale = size / rect.size();
-                transform = transform * Mat4::from_scale(scale.extend(1.));
+                transform *= Mat4::from_scale(scale.extend(1.));
                 extracted_uinodes.uinodes.push(ExtractedUiNode {
                     stack_index,
                     transform,
@@ -419,16 +415,13 @@ pub fn extract_exact_atlas_images(
             }
         }
     }
-    
 }
-
 
 pub struct ExactImagePlugin;
 
 impl Plugin for ExactImagePlugin {
     fn build(&self, app: &mut App) {
-        app
-            .register_type::<ExactImage>()
+        app.register_type::<ExactImage>()
             .register_type::<ExactAtlasImage>()
             .register_type::<ExactSize>()
             .register_type::<ImageAlignment>()

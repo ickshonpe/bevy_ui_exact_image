@@ -19,7 +19,6 @@ fn spawn_example(mut commands: Commands, assets: Res<AssetServer>) {
         ..Default::default()
     },));
 }
-
 fn main() {
     App::new()
         .add_plugins(DefaultPlugins.set(ImagePlugin::default_nearest()))
